@@ -7,8 +7,8 @@ import java.util.*;
 
 public class AppAgendaGUI extends JFrame {
 
-    JPanel p1, p2, tabla, añadirGUI, regreso1, regreso2, regreso3, lista, mostrarGUI, buscarGUI, sBuscar;
-    JTextField tNombre, tNumero, tEmail, tDireccion;
+    JPanel panel1, panel2, tabla, añadirGUI, regreso1, regreso2, regreso3, lista, mostrarGUI, buscarGUI, sBuscar;
+    JTextField campoDeTextoNombre, campoDeTextoApellidoMaterno, campoDeTextoApellidoPaterno, tNumero, tEmail, fechaDeNacimiento;
     Agenda agenda = new Agenda();
     JScrollPane scroll;
     JButton volver;
@@ -18,31 +18,31 @@ public class AppAgendaGUI extends JFrame {
         //interfaz principal
         setTitle("Agenda De Revoqueros");
         setLayout(new BorderLayout());
-        p2 = new JPanel();
-        p2.setLayout(new FlowLayout());
+        panel2 = new JPanel();
+        panel2.setLayout(new FlowLayout());
         JLabel titulo = new JLabel("Agenda De Revoqueros");
         titulo.setForeground(Color.white);
-        p2.add(titulo);
-        p2.setBackground(Color.black);
-        add(p2, BorderLayout.NORTH);
-        p1 = new JPanel();
-        p1.setLayout(new GridLayout(0, 1));
+        panel2.add(titulo);
+        panel2.setBackground(Color.black);
+        add(panel2, BorderLayout.NORTH);
+        panel1 = new JPanel();
+        panel1.setLayout(new GridLayout(0, 1));
         JButton mostrar = new JButton("Mostrar");
         mostrar.setBackground(new Color(59, 55, 52));
         mostrar.setForeground(Color.white);
         mostrar.addActionListener(new OyenteMostrar(agenda.getContactos(), "mostrar"));
-        p1.add(mostrar);
+        panel1.add(mostrar);
         JButton añadir = new JButton("Añadir");
         añadir.addActionListener(new OyenteAñadir());
         añadir.setBackground(new Color(59, 55, 52));
         añadir.setForeground(Color.white);
-        p1.add(añadir);
+        panel1.add(añadir);
         JButton buscar = new JButton("Buscar");
         buscar.setBackground(new Color(59, 55, 52));
         buscar.setForeground(Color.white);
         buscar.addActionListener(new OyenteBuscar());
-        p1.add(buscar);
-        add(p1, BorderLayout.CENTER);
+        panel1.add(buscar);
+        add(panel1, BorderLayout.CENTER);
         setSize(500, 500);
         setLocationRelativeTo(null);
         setVisible(true);
@@ -69,7 +69,7 @@ public class AppAgendaGUI extends JFrame {
             volver = new JButton("Volver");
 
             if (opc.equals("mostrar")) {
-                remove(p1);
+                remove(panel1);
                 for (Contacto c : contactos) {
                     JButton contacto = new JButton(c.getNombre());
                     contacto.addActionListener(new OyenteVerDatos(c));
@@ -109,7 +109,7 @@ public class AppAgendaGUI extends JFrame {
         public void actionPerformed(ActionEvent evento) {
             remove(volver);
             remove(scroll);
-            add(p1);
+            add(panel1);
             revalidate();
             repaint();
         }
@@ -119,32 +119,48 @@ public class AppAgendaGUI extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent evento) {
-            remove(p1);
+            remove(panel1);
             añadirGUI = new JPanel();
             añadirGUI.setLayout(new GridLayout(0, 1));
             añadirGUI.add(imagen);
             tabla = new JPanel();
-            tabla.setLayout(new GridLayout(0, 2));
+            tabla.setLayout(new GridLayout(0, 3));
+            
+            //nombres del usuario
             JLabel nombre = new JLabel("Nombre");
             nombre.setHorizontalAlignment(SwingConstants.CENTER);
             tabla.add(nombre);
+            JLabel apellidoMaterno = new JLabel("Apellido Materno");
+            apellidoMaterno.setHorizontalAlignment(SwingConstants.CENTER);
+            tabla.add(apellidoMaterno);
+            JLabel apellidoPaterno = new JLabel("Apellido Paterno");
+            apellidoPaterno.setHorizontalAlignment(SwingConstants.CENTER);
+            tabla.add(apellidoPaterno);
+            campoDeTextoNombre = new JTextField();
+            tabla.add(campoDeTextoNombre);
+            campoDeTextoApellidoMaterno = new JTextField();
+            tabla.add(campoDeTextoApellidoMaterno);
+            campoDeTextoApellidoPaterno =new JTextField();
+            tabla.add(campoDeTextoApellidoPaterno);
+            
+            
+            //informacion de contacto
             JLabel numero = new JLabel("Numero");
             numero.setHorizontalAlignment(SwingConstants.CENTER);
             tabla.add(numero);
-            tNombre = new JTextField();
-            tabla.add(tNombre);
-            tNumero = new JTextField();
-            tabla.add(tNumero);
             JLabel email = new JLabel("E-mail");
             email.setHorizontalAlignment(SwingConstants.CENTER);
             tabla.add(email);
-            JLabel direccion = new JLabel("Direccion");
-            direccion.setHorizontalAlignment(SwingConstants.CENTER);
-            tabla.add(direccion);
+            JLabel fechaDeNAcimiento = new JLabel("Fecha de nacimiento");
+            fechaDeNAcimiento.setHorizontalAlignment(SwingConstants.CENTER);
+            tabla.add(fechaDeNAcimiento);
+            tNumero = new JTextField();            
+            tabla.add(tNumero);
+            
             tEmail = new JTextField();
             tabla.add(tEmail);
-            tDireccion = new JTextField();
-            tabla.add(tDireccion);
+            fechaDeNacimiento = new JTextField();
+            tabla.add(fechaDeNacimiento);
             añadirGUI.add(tabla);
             regreso1 = new JPanel();
             regreso1.setLayout(new GridLayout(0, 1));
@@ -166,7 +182,7 @@ public class AppAgendaGUI extends JFrame {
         public void actionPerformed(ActionEvent evento) {
             remove(regreso1);
             remove(añadirGUI);
-            add(p1);
+            add(panel1);
             revalidate();
             repaint();
         }
@@ -177,10 +193,10 @@ public class AppAgendaGUI extends JFrame {
         public void actionPerformed(ActionEvent evento) {
             int band = 0;
             try {
-                String nomb = tNombre.getText();
+                String nomb = campoDeTextoNombre.getText();
                 int num = Integer.parseInt(tNumero.getText());
                 String email = tEmail.getText();
-                String dir = tDireccion.getText();
+                String dir = fechaDeNacimiento.getText();
                 if (nomb.isEmpty()) {
                     JOptionPane.showMessageDialog(añadirGUI, "El nombre es un campo obligatorio", "Error de entrada", JOptionPane.ERROR_MESSAGE);
                 } else {
@@ -208,7 +224,7 @@ public class AppAgendaGUI extends JFrame {
                 JOptionPane.showMessageDialog(añadirGUI, "Contacto guardado exitosamente", "Accion realizada exitosamente", JOptionPane.INFORMATION_MESSAGE);
                 remove(regreso1);
                 remove(añadirGUI);
-                add(p1);
+                add(panel1);
                 revalidate();
                 repaint();
             }
@@ -238,7 +254,7 @@ public class AppAgendaGUI extends JFrame {
     class OyenteBuscar implements ActionListener {
 
         public void actionPerformed(ActionEvent evento) {
-            remove(p1);
+            remove(panel1);
             buscarGUI = new JPanel();
             buscarGUI.setLayout(new GridLayout(0, 1));
             JLabel tBuscar = new JLabel("Seleccione el metodo de busqueda");
@@ -367,8 +383,8 @@ public class AppAgendaGUI extends JFrame {
             JLabel numero = new JLabel("Numero");
             numero.setHorizontalAlignment(SwingConstants.CENTER);
             tabla.add(numero);
-            tNombre = new JTextField();
-            tabla.add(tNombre);
+            campoDeTextoNombre = new JTextField();
+            tabla.add(campoDeTextoNombre);
             tNumero = new JTextField();
             tabla.add(tNumero);
             JLabel email = new JLabel("E-mail");
@@ -379,15 +395,15 @@ public class AppAgendaGUI extends JFrame {
             tabla.add(direccion);
             tEmail = new JTextField();
             tabla.add(tEmail);
-            tDireccion = new JTextField();
-            tabla.add(tDireccion);
+            fechaDeNacimiento = new JTextField();
+            tabla.add(fechaDeNacimiento);
             mostrarGUI.add(tabla);
             regreso3 = new JPanel();
             regreso3.setLayout(new GridLayout(0, 1));
-            tNombre.setText(contacto.getNombre());
+            campoDeTextoNombre.setText(contacto.getNombre());
             tNumero.setText(String.valueOf(contacto.getNumero()));
             tEmail.setText(contacto.getEmail());
-            tDireccion.setText(contacto.getDireccion());
+            fechaDeNacimiento.setText(contacto.getDireccion());
             JButton borrar = new JButton("Borrar");
             borrar.addActionListener(new OyenteBorrar2(contacto));
             regreso3.add(borrar);
@@ -416,7 +432,7 @@ public class AppAgendaGUI extends JFrame {
                 agenda.eliminarContacto(contacto);
                 remove(regreso3);
                 remove(mostrarGUI);
-                add(p1, BorderLayout.CENTER);
+                add(panel1, BorderLayout.CENTER);
 
                 revalidate();
                 repaint();
@@ -465,7 +481,7 @@ public class AppAgendaGUI extends JFrame {
         public void actionPerformed(ActionEvent evento) {
             remove(regreso1);
             remove(buscarGUI);
-            add(p1);
+            add(panel1);
             revalidate();
             repaint();
         }
