@@ -625,6 +625,7 @@ public class AppAgendaGUI extends JFrame {
             campoDeTextoApellidoMaterno.setEditable(true);
             campoDeTextoNumero.setEditable(true);
             campoDeTextoEmail.setEditable(true);
+            campoDeTextoEdad.setEditable(true);
             JButton botonGuardarCambios = new JButton("Guardar cambios");
             botonGuardarCambios.addActionListener(new OyenteGuardar("actualizar",
                     contacto));
