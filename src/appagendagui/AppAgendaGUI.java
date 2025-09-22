@@ -3,15 +3,20 @@ package appagendagui;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class AppAgendaGUI extends JFrame {
 
-    JPanel panel1, panel2, tabla, añadirGUI, regreso1, regreso2, regreso3, lista, mostrarGUI, buscarGUI, sBuscar;
-    JTextField campoDeTextoNombre, campoDeTextoApellidoMaterno, campoDeTextoApellidoPaterno, tNumero, tEmail, fechaDeNacimiento;
+    JPanel panel1, panel2, tabla, añadirGUI, regreso1, regreso2, regreso3, lista,
+            mostrarGUI, buscarGUI, sBuscar;
+    JTextField campoDeTextoNombre, campoDeTextoApellidoPaterno,
+            campoDeTextoApellidoMaterno, campoDeTextoNumero, campoDeTextoEmail,
+            campoDeTextoEdad;
     Agenda agenda = new Agenda();
     JScrollPane scroll;
-    JButton volver;
+    JButton volver, actualizar, borrar, volverInicio;
     JLabel imagen;
 
     public AppAgendaGUI() {
@@ -71,7 +76,8 @@ public class AppAgendaGUI extends JFrame {
             if (opc.equals("mostrar")) {
                 remove(panel1);
                 for (Contacto c : contactos) {
-                    JButton contacto = new JButton(c.getNombre());
+                    JButton contacto = new JButton(c.getNombre() + " "
+                            + c.getApellidoPaterno() + " " + c.getApellidoMaterno());
                     contacto.addActionListener(new OyenteVerDatos(c));
                     lista.add(contacto);
                 }
@@ -125,47 +131,47 @@ public class AppAgendaGUI extends JFrame {
             añadirGUI.add(imagen);
             tabla = new JPanel();
             tabla.setLayout(new GridLayout(0, 3));
-            
+
             //nombres del usuario
             JLabel nombre = new JLabel("Nombre");
             nombre.setHorizontalAlignment(SwingConstants.CENTER);
             tabla.add(nombre);
+            JLabel tituloApellidoPaterno = new JLabel("Apellido Paterno");
+            tituloApellidoPaterno.setHorizontalAlignment(SwingConstants.CENTER);
+            tabla.add(tituloApellidoPaterno);
             JLabel apellidoMaterno = new JLabel("Apellido Materno");
             apellidoMaterno.setHorizontalAlignment(SwingConstants.CENTER);
             tabla.add(apellidoMaterno);
-            JLabel apellidoPaterno = new JLabel("Apellido Paterno");
-            apellidoPaterno.setHorizontalAlignment(SwingConstants.CENTER);
-            tabla.add(apellidoPaterno);
             campoDeTextoNombre = new JTextField();
             tabla.add(campoDeTextoNombre);
+            campoDeTextoApellidoPaterno = new JTextField();
+            tabla.add(campoDeTextoApellidoPaterno);
             campoDeTextoApellidoMaterno = new JTextField();
             tabla.add(campoDeTextoApellidoMaterno);
-            campoDeTextoApellidoPaterno =new JTextField();
-            tabla.add(campoDeTextoApellidoPaterno);
-            
-            
-            //informacion de contacto
-            JLabel numero = new JLabel("Numero");
-            numero.setHorizontalAlignment(SwingConstants.CENTER);
-            tabla.add(numero);
-            JLabel email = new JLabel("E-mail");
-            email.setHorizontalAlignment(SwingConstants.CENTER);
-            tabla.add(email);
-            JLabel fechaDeNAcimiento = new JLabel("Fecha de nacimiento");
-            fechaDeNAcimiento.setHorizontalAlignment(SwingConstants.CENTER);
-            tabla.add(fechaDeNAcimiento);
-            tNumero = new JTextField();            
-            tabla.add(tNumero);
-            
-            tEmail = new JTextField();
-            tabla.add(tEmail);
-            fechaDeNacimiento = new JTextField();
-            tabla.add(fechaDeNacimiento);
+
+            //titulos de informacion de contacto
+            JLabel tituloNumero = new JLabel("Numero");
+            tituloNumero.setHorizontalAlignment(SwingConstants.CENTER);
+            tabla.add(tituloNumero);
+            JLabel tituloEmail = new JLabel("E-mail");
+            tituloEmail.setHorizontalAlignment(SwingConstants.CENTER);
+            tabla.add(tituloEmail);
+            JLabel TituloFechaDeNAcimiento = new JLabel("Fecha de nacimiento");
+            TituloFechaDeNAcimiento.setHorizontalAlignment(SwingConstants.CENTER);
+            tabla.add(TituloFechaDeNAcimiento);
+
+            //cuadros de texto para informacion del contacto
+            campoDeTextoNumero = new JTextField();
+            tabla.add(campoDeTextoNumero);
+            campoDeTextoEmail = new JTextField();
+            tabla.add(campoDeTextoEmail);
+            campoDeTextoEdad = new JTextField();
+            tabla.add(campoDeTextoEdad);
             añadirGUI.add(tabla);
             regreso1 = new JPanel();
             regreso1.setLayout(new GridLayout(0, 1));
             JButton guardar = new JButton("Guardar");
-            guardar.addActionListener(new OyenteGuardar());
+            guardar.addActionListener(new OyenteGuardar("Guardar", null));
             regreso1.add(guardar);
             JButton volver = new JButton("Volver");
             volver.addActionListener(new OyenteVolver());
@@ -190,40 +196,115 @@ public class AppAgendaGUI extends JFrame {
 
     class OyenteGuardar implements ActionListener {
 
+        private String opcion;
+        private Contacto contacto;
+
+        public OyenteGuardar(String opcion, Contacto contacto) {
+            this.opcion = opcion;
+            this.contacto = contacto;
+        }
+
         public void actionPerformed(ActionEvent evento) {
             int band = 0;
             try {
-                String nomb = campoDeTextoNombre.getText();
-                int num = Integer.parseInt(tNumero.getText());
-                String email = tEmail.getText();
-                String dir = fechaDeNacimiento.getText();
-                if (nomb.isEmpty()) {
-                    JOptionPane.showMessageDialog(añadirGUI, "El nombre es un campo obligatorio", "Error de entrada", JOptionPane.ERROR_MESSAGE);
-                } else {
-                    if (agenda.compararNum(num) == true) {
-                        JOptionPane.showMessageDialog(añadirGUI, "El numero de contacto ya existe", "Contacto existente", JOptionPane.ERROR_MESSAGE);
-                    } else if (agenda.compararNomb(nomb) == true) {
-                        int respuesta = JOptionPane.showConfirmDialog(añadirGUI, "El nombre de contacto ya existe, ¿Desea guardar otro contacto con el mismo nombre?", "Contacto existente", JOptionPane.YES_NO_OPTION);
-                        if (respuesta == JOptionPane.YES_OPTION) {
-                            agenda.agregarContacto(nomb, num, email, dir);
-                            band = 1;
-                        } else {
-                            JOptionPane.showMessageDialog(añadirGUI, "Accion cancelada", "Accion cancelada", JOptionPane.INFORMATION_MESSAGE);
-                        }
-                    } else {
-                        agenda.agregarContacto(nomb, num, email, dir);
-                        band = 1;
-                    }
+                String nombre = campoDeTextoNombre.getText();
+                String numero = campoDeTextoNumero.getText();
+                String email = campoDeTextoEmail.getText();
+                String fechaTexto = campoDeTextoEdad.getText(); // capturo texto
+                String apellidoPaterno = campoDeTextoApellidoPaterno.getText();
+                String apellidoMaterno = campoDeTextoApellidoMaterno.getText();
+
+                // Validar campos vacíos
+                if (nombre.isEmpty() || numero.isEmpty() || email.isEmpty()
+                        || fechaTexto.isEmpty() || apellidoPaterno.isEmpty()
+                        || apellidoMaterno.isEmpty()) {
+                    JOptionPane.showMessageDialog(añadirGUI,
+                            "Todos los campos son obligatorios",
+                            "Error de entrada",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(añadirGUI, "Debe introducir un numero telefonico valido", "Error de entrada", JOptionPane.ERROR_MESSAGE);
+
+                // Validar número
+                if (!numero.matches("\\d{10}")) {
+                    JOptionPane.showMessageDialog(añadirGUI,
+                            "El número telefónico debe tener exactamente 10 dígitos",
+                            "Error de entrada",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Validar email
+                if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]$")) {
+                    JOptionPane.showMessageDialog(añadirGUI,
+                            "Debe introducir un correo electrónico válido",
+                            "Error de entrada",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Convertir fecha de String a Date
+                SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+                formato.setLenient(false);
+                Date fechaDeNacimiento = null;
+                try {
+                    fechaDeNacimiento = formato.parse(fechaTexto);
+                } catch (ParseException e) {
+                    JOptionPane.showMessageDialog(añadirGUI,
+                            "La fecha debe tener el formato dd/MM/yyyy",
+                            "Error de entrada",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Verificar duplicados
+                if (agenda.compararNumero(numero, contacto)) {
+                    JOptionPane.showMessageDialog(añadirGUI,
+                            "El número de contacto ya existe en otro contacto",
+                            "Contacto existente",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Guardar o actualizar
+                if (opcion.equalsIgnoreCase("Guardar")) {
+                    agenda.agregarContacto(nombre, apellidoPaterno, apellidoMaterno,
+                            numero, email, fechaDeNacimiento); // pasa Date
+                } else if (opcion.equalsIgnoreCase("actualizar")) {
+                    contacto.setNombre(nombre);
+                    contacto.setApellidoPaterno(apellidoPaterno);
+                    contacto.setApellidoMaterno(apellidoMaterno);
+                    contacto.setNumero(numero);
+                    contacto.setEmail(email);
+                    contacto.setFechaDeNacimiento(fechaDeNacimiento); // guarda Date
+                }
+
+                band = 1;
+
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(añadirGUI, "Error inesperado" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(añadirGUI,
+                        "Error inesperado: " + e.getMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
             }
+
             if (band == 1) {
-                JOptionPane.showMessageDialog(añadirGUI, "Contacto guardado exitosamente", "Accion realizada exitosamente", JOptionPane.INFORMATION_MESSAGE);
-                remove(regreso1);
-                remove(añadirGUI);
+                JOptionPane.showMessageDialog(añadirGUI,
+                        "Contacto guardado exitosamente",
+                        "Acción realizada exitosamente",
+                        JOptionPane.INFORMATION_MESSAGE);
+                if (regreso1 != null) {
+                    remove(regreso1);
+                }
+                if (añadirGUI != null) {
+                    remove(añadirGUI);
+                }
+                if (regreso3 != null) {
+                    remove(regreso3);
+                }
+                if (mostrarGUI != null) {
+                    remove(mostrarGUI);
+                }
                 add(panel1);
                 revalidate();
                 repaint();
@@ -240,13 +321,18 @@ public class AppAgendaGUI extends JFrame {
         }
 
         public void actionPerformed(ActionEvent evento) {
-            int respuesta = JOptionPane.showConfirmDialog(mostrarGUI, "¿Estás seguro de que deseas borrar este contacto?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+            int respuesta = JOptionPane.showConfirmDialog(mostrarGUI, "¿Estás "
+                    + "seguro de que deseas borrar este contacto?", "Confirmar "
+                    + "eliminación", JOptionPane.YES_NO_OPTION);
             if (respuesta == JOptionPane.YES_OPTION) {
-                JOptionPane.showMessageDialog(mostrarGUI, "Contacto borrado exitosamente", "Accion realizada con exito", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(mostrarGUI, "Contacto borrado "
+                        + "exitosamente", "Accion realizada con exito",
+                        JOptionPane.INFORMATION_MESSAGE);
                 agenda.eliminarContacto(contacto);
                 remove(regreso1);
                 remove(mostrarGUI);
-                new OyenteMostrar(agenda.getContactos(), "mostrar").actionPerformed(null);
+                new OyenteMostrar(agenda.getContactos(),
+                        "mostrar").actionPerformed(null);
             }
         }
     }
@@ -314,7 +400,9 @@ public class AppAgendaGUI extends JFrame {
                     String texto = dato.getText();
                     int band = 0;
                     if (texto.isEmpty()) {
-                        JOptionPane.showMessageDialog(sBuscar, "Ingrese un dato valido", "Entrada invalida", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(sBuscar, "Ingrese un dato"
+                                + " valido", "Entrada invalida",
+                                JOptionPane.ERROR_MESSAGE);
                         band = 1;
                     }
                     ArrayList<Contacto> resultado = new ArrayList<>();
@@ -328,7 +416,10 @@ public class AppAgendaGUI extends JFrame {
                                 resultado = agenda.buscarContactoPorNumero(num);
                             } catch (NumberFormatException ex) {
                                 if (band != 1) {
-                                    JOptionPane.showMessageDialog(sBuscar, "Ingrese un número válido", "Entrada invalida", JOptionPane.ERROR_MESSAGE);
+                                    JOptionPane.showMessageDialog(sBuscar,
+                                            "Ingrese un número válido",
+                                            "Entrada invalida",
+                                            JOptionPane.ERROR_MESSAGE);
                                     band = 1;
                                 }
                             }
@@ -337,11 +428,14 @@ public class AppAgendaGUI extends JFrame {
                             resultado = agenda.buscarContactoPorEmail(texto);
                             break;
                         case 4:
-                            resultado = agenda.buscarContactoPorDireccion(texto);
+                            resultado = agenda.buscarContactoPorApellidoPaterno(texto);
                             break;
                     }
                     if (resultado.isEmpty() && band == 0) {
-                        JOptionPane.showMessageDialog(sBuscar, "Ningun contacto coincide con esta informacion", "El dato no coincidió", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(sBuscar,
+                                "Ningun contacto coincide con esta informacion",
+                                "El dato no coincidió",
+                                JOptionPane.INFORMATION_MESSAGE);
                     } else {
                         if (band != 1) {
                             new OyenteMostrar(resultado, "buscar").actionPerformed(null);
@@ -376,39 +470,65 @@ public class AppAgendaGUI extends JFrame {
             mostrarGUI.setLayout(new GridLayout(0, 1));
             mostrarGUI.add(imagen);
             tabla = new JPanel();
-            tabla.setLayout(new GridLayout(0, 2));
+            tabla.setLayout(new GridLayout(0, 3));
             JLabel nombre = new JLabel("Nombre");
             nombre.setHorizontalAlignment(SwingConstants.CENTER);
             tabla.add(nombre);
-            JLabel numero = new JLabel("Numero");
-            numero.setHorizontalAlignment(SwingConstants.CENTER);
-            tabla.add(numero);
+            JLabel tituloApellidoPaterno = new JLabel("Apellido Paterno");
+            tituloApellidoPaterno.setHorizontalAlignment(SwingConstants.CENTER);
+            tabla.add(tituloApellidoPaterno);
+            JLabel tituloApellidoMaterno = new JLabel("Apellido Materno");
+            tituloApellidoMaterno.setHorizontalAlignment(SwingConstants.CENTER);
+            tabla.add(tituloApellidoMaterno);
             campoDeTextoNombre = new JTextField();
+            campoDeTextoNombre.setEditable(false);
             tabla.add(campoDeTextoNombre);
-            tNumero = new JTextField();
-            tabla.add(tNumero);
-            JLabel email = new JLabel("E-mail");
-            email.setHorizontalAlignment(SwingConstants.CENTER);
-            tabla.add(email);
-            JLabel direccion = new JLabel("Direccion");
-            direccion.setHorizontalAlignment(SwingConstants.CENTER);
-            tabla.add(direccion);
-            tEmail = new JTextField();
-            tabla.add(tEmail);
-            fechaDeNacimiento = new JTextField();
-            tabla.add(fechaDeNacimiento);
+            campoDeTextoApellidoPaterno = new JTextField();
+            campoDeTextoApellidoPaterno.setEditable(false);
+            tabla.add(campoDeTextoApellidoPaterno);
+            campoDeTextoApellidoMaterno = new JTextField();
+            campoDeTextoApellidoMaterno.setEditable(false);
+            tabla.add(campoDeTextoApellidoMaterno);
+
+            JLabel tituloNumero = new JLabel("Numero");
+            tituloNumero.setHorizontalAlignment(SwingConstants.CENTER);
+            tabla.add(tituloNumero);
+            JLabel tituloEmail = new JLabel("E-mail");
+            tituloEmail.setHorizontalAlignment(SwingConstants.CENTER);
+            tabla.add(tituloEmail);
+            JLabel tituloEdad = new JLabel("Edad");
+            tituloEdad.setHorizontalAlignment(SwingConstants.CENTER);
+            tabla.add(tituloEdad);
+            campoDeTextoNumero = new JTextField();
+            campoDeTextoNumero.setEditable(false);
+            tabla.add(campoDeTextoNumero);
+            campoDeTextoEmail = new JTextField();
+            campoDeTextoEmail.setEditable(false);
+            tabla.add(campoDeTextoEmail);
+            campoDeTextoEdad = new JTextField();
+            campoDeTextoEdad.setEditable(false);
+            tabla.add(campoDeTextoEdad);
+
             mostrarGUI.add(tabla);
             regreso3 = new JPanel();
             regreso3.setLayout(new GridLayout(0, 1));
             campoDeTextoNombre.setText(contacto.getNombre());
-            tNumero.setText(String.valueOf(contacto.getNumero()));
-            tEmail.setText(contacto.getEmail());
-            fechaDeNacimiento.setText(contacto.getDireccion());
-            JButton borrar = new JButton("Borrar");
+            campoDeTextoApellidoPaterno.setText(contacto.getApellidoPaterno());
+            campoDeTextoApellidoMaterno.setText(contacto.getApellidoMaterno());
+            campoDeTextoNumero.setText(contacto.getNumero());
+            campoDeTextoEmail.setText(contacto.getEmail());
+            SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+            Date fechaNacimiento = contacto.getFechaDeNacimiento(); 
+            int edad = agenda.calcularEdad(fechaNacimiento); 
+            campoDeTextoEdad.setText(String.valueOf(edad));
+            borrar = new JButton("Borrar");
             borrar.addActionListener(new OyenteBorrar2(contacto));
             regreso3.add(borrar);
-            JButton volver = new JButton("Volver");
-            volver.addActionListener(new OyenteVolver5());
+            actualizar = new JButton("Actualizar");
+            actualizar.addActionListener(new OyenteActualizar(contacto));
+            regreso3.add(actualizar);
+            volver = new JButton("Volver a inicio");
+            volver.addActionListener(new OyenteVolverInicio());
             regreso3.add(volver);
             add(regreso3, BorderLayout.SOUTH);
             add(mostrarGUI, BorderLayout.CENTER);
@@ -446,7 +566,7 @@ public class AppAgendaGUI extends JFrame {
             remove(regreso3);
             remove(mostrarGUI);
             add(scroll, BorderLayout.CENTER);
-            add(volver, BorderLayout.SOUTH);
+            add(regreso3, BorderLayout.SOUTH);
             revalidate();
             repaint();
         }
@@ -481,6 +601,54 @@ public class AppAgendaGUI extends JFrame {
         public void actionPerformed(ActionEvent evento) {
             remove(regreso1);
             remove(buscarGUI);
+            add(panel1);
+            revalidate();
+            repaint();
+        }
+    }
+
+    class OyenteActualizar implements ActionListener {
+
+        private Contacto contacto;
+
+        public OyenteActualizar(Contacto contacto) {
+            this.contacto = contacto;
+        }
+
+        public void actionPerformed(ActionEvent evento) {
+
+            regreso3.remove(actualizar);
+            regreso3.remove(borrar);
+            regreso3.remove(volver);
+            campoDeTextoNombre.setEditable(true);
+            campoDeTextoApellidoPaterno.setEditable(true);
+            campoDeTextoApellidoMaterno.setEditable(true);
+            campoDeTextoNumero.setEditable(true);
+            campoDeTextoEmail.setEditable(true);
+            JButton botonGuardarCambios = new JButton("Guardar cambios");
+            botonGuardarCambios.addActionListener(new OyenteGuardar("actualizar",
+                    contacto));
+            regreso3.add(botonGuardarCambios);
+            JButton volverInicio = new JButton("Volver al inicio");
+            volverInicio.addActionListener(new OyenteVolverInicio());
+            regreso3.add(volverInicio);
+            revalidate();
+            repaint();
+        }
+    }
+
+    class OyenteVolverInicio implements ActionListener {
+
+        public void actionPerformed(ActionEvent evento) {
+            remove(regreso3);
+            if (mostrarGUI != null) {
+                remove(mostrarGUI);
+            }
+            if (volver != null) {
+                remove(volver);
+            }
+
+            remove(mostrarGUI);
             add(panel1);
             revalidate();
             repaint();

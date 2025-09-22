@@ -1,14 +1,10 @@
 [
   {
-    "nombre": "tu",
-    "numero": 89879,
-    "email": "jsjsj",
-    "direccion": "kaak"
-  },
-  {
     "nombre": "yo",
-    "numero": 4894,
-    "email": "",
-    "direccion": ""
+    "apellidoMaterno": "yo",
+    "apellidoPaterno": "yo",
+    "numero": "1234567890",
+    "email": "1@1.s",
+    "fechaDeNacimiento": "May 24, 2001, 12:00:00 AM"
   }
 ]

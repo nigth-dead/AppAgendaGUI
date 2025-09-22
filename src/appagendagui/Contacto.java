@@ -1,19 +1,25 @@
 package appagendagui;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class Contacto implements Serializable {
 
     private String nombre;
-    private int numero;
+    private String apellidoMaterno;
+    private String apellidoPaterno;
+    private String numero;
     private String email;
-    private String direccion;
+    private Date fechaDeNacimiento;
 
-    public Contacto(String nombre, int numero, String email, String direccion) {
+    public Contacto(String nombre, String apellidoPaterno, String apellidoMaterno,
+            String numero, String email, Date fechaDeNacimiento) {
         this.nombre = nombre;
+        this.apellidoMaterno = apellidoMaterno;
+        this.apellidoPaterno = apellidoPaterno;
         this.numero = numero;
         this.email = email;
-        this.direccion = direccion;
+        this.fechaDeNacimiento = fechaDeNacimiento;
     }
 
     public String getNombre() {
@@ -24,11 +30,27 @@ public class Contacto implements Serializable {
         this.nombre = nombre;
     }
 
-    public int getNumero() {
+    public String getApellidoMaterno() {
+        return apellidoMaterno;
+    }
+
+    public void setApellidoMaterno(String apellidoMaterno) {
+        this.apellidoMaterno = apellidoMaterno;
+    }
+
+    public String getApellidoPaterno() {
+        return apellidoPaterno;
+    }
+
+    public void setApellidoPaterno(String apellidoPaterno) {
+        this.apellidoPaterno = apellidoPaterno;
+    }
+
+    public String getNumero() {
         return numero;
     }
 
-    public void setNumero(int numero) {
+    public void setNumero(String numero) {
         this.numero = numero;
     }
 
@@ -40,20 +62,16 @@ public class Contacto implements Serializable {
         this.email = email;
     }
 
-    public String getDireccion() {
-        return direccion;
+    public Date getFechaDeNacimiento() {
+        return fechaDeNacimiento;
     }
 
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
+    public void setFechaDeNacimiento(Date fechaDeNacimiento) {
+        this.fechaDeNacimiento = fechaDeNacimiento;
     }
 
     /**
      *
      * @return
      */
-    @Override
-    public String toString() {
-        return nombre + " - " + numero + " - " + email + " - " + direccion;
-    }
 }
