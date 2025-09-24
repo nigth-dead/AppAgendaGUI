@@ -13,7 +13,7 @@ public class AppAgendaGUI extends JFrame {
             mostrarGUI, buscarGUI, sBuscar;
     JTextField campoDeTextoNombre, campoDeTextoApellidoPaterno,
             campoDeTextoApellidoMaterno, campoDeTextoNumero, campoDeTextoEmail,
-            campoDeTextoEdad;
+            campoDeTextoEdad, campoDeTextoFecha;
     Agenda agenda = new Agenda();
     JScrollPane scroll;
     JButton volver, actualizar, borrar, volverInicio;
@@ -210,9 +210,14 @@ public class AppAgendaGUI extends JFrame {
                 String nombre = campoDeTextoNombre.getText();
                 String numero = campoDeTextoNumero.getText();
                 String email = campoDeTextoEmail.getText();
-                String fechaTexto = campoDeTextoEdad.getText(); // capturo texto
                 String apellidoPaterno = campoDeTextoApellidoPaterno.getText();
                 String apellidoMaterno = campoDeTextoApellidoMaterno.getText();
+                String fechaTexto;
+                if (opcion.equalsIgnoreCase("Guardar")){
+                    fechaTexto = campoDeTextoEdad.getText();
+                }else{
+                    fechaTexto = campoDeTextoFecha.getText();
+                }
 
                 // Validar campos vacíos
                 if (nombre.isEmpty() || numero.isEmpty() || email.isEmpty()
@@ -362,9 +367,9 @@ public class AppAgendaGUI extends JFrame {
             JButton bEmail = new JButton("E-mail");
             bEmail.addActionListener(new OyenteBuscaropc(3));
             fila2.add(bEmail);
-            JButton bDireccion = new JButton("Direccion");
-            bDireccion.addActionListener(new OyenteBuscaropc(4));
-            fila2.add(bDireccion);
+            JButton botonApellidoPaterno = new JButton("Apellido Paterno");
+            botonApellidoPaterno.addActionListener(new OyenteBuscaropc(4));
+            fila2.add(botonApellidoPaterno);
             buscarGUI.add(fila2);
             JButton volver = new JButton("Volver");
             volver.addActionListener(new OyenteVolver3());
@@ -527,7 +532,7 @@ public class AppAgendaGUI extends JFrame {
             borrar.addActionListener(new OyenteBorrar2(contacto));
             regreso3.add(borrar);
             actualizar = new JButton("Actualizar");
-            actualizar.addActionListener(new OyenteActualizar(contacto));
+            actualizar.addActionListener(new OyenteActualizar(contacto,tituloEdad, campoDeTextoEdad));
             regreso3.add(actualizar);
             volver = new JButton("Volver a inicio");
             volver.addActionListener(new OyenteVolverInicio());
@@ -612,9 +617,13 @@ public class AppAgendaGUI extends JFrame {
     class OyenteActualizar implements ActionListener {
 
         private Contacto contacto;
+        private JLabel tituloEdad;
+        private JTextField campoDeTextoEdad;
 
-        public OyenteActualizar(Contacto contacto) {
+        public OyenteActualizar(Contacto contacto, JLabel tituloEdad, JTextField campoDeTextoEdad) {
             this.contacto = contacto;
+            this.tituloEdad = tituloEdad;
+            this.campoDeTextoEdad = campoDeTextoEdad;
         }
 
         public void actionPerformed(ActionEvent evento) {
@@ -622,12 +631,18 @@ public class AppAgendaGUI extends JFrame {
             regreso3.remove(actualizar);
             regreso3.remove(borrar);
             regreso3.remove(volver);
+            tituloEdad.setText("Fecha de nacimiento");
+            tabla.remove(campoDeTextoEdad);
+            SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+            campoDeTextoFecha=new JTextField();
+            campoDeTextoFecha.setText(formato.format(contacto.getFechaDeNacimiento()));
+            tabla.add(campoDeTextoFecha);
             campoDeTextoNombre.setEditable(true);
             campoDeTextoApellidoPaterno.setEditable(true);
             campoDeTextoApellidoMaterno.setEditable(true);
             campoDeTextoNumero.setEditable(true);
             campoDeTextoEmail.setEditable(true);
-            campoDeTextoEdad.setEditable(true);
+            campoDeTextoFecha.setEditable(true);
             JButton botonGuardarCambios = new JButton("Guardar cambios");
             botonGuardarCambios.addActionListener(new OyenteGuardar("actualizar",
                     contacto));
