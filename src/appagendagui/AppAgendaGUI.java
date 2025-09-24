@@ -235,11 +235,13 @@ public class AppAgendaGUI extends JFrame {
                 }
 
                 // Validar email
-                if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]$")) {
-                    JOptionPane.showMessageDialog(añadirGUI,
+                if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+                    JOptionPane.showMessageDialog(
+                            añadirGUI,
                             "Debe introducir un correo electrónico válido",
                             "Error de entrada",
-                            JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.ERROR_MESSAGE
+                    );
                     return;
                 }
 
@@ -518,8 +520,8 @@ public class AppAgendaGUI extends JFrame {
             campoDeTextoNumero.setText(contacto.getNumero());
             campoDeTextoEmail.setText(contacto.getEmail());
             SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-            Date fechaNacimiento = contacto.getFechaDeNacimiento(); 
-            int edad = agenda.calcularEdad(fechaNacimiento); 
+            Date fechaNacimiento = contacto.getFechaDeNacimiento();
+            int edad = agenda.calcularEdad(fechaNacimiento);
             campoDeTextoEdad.setText(String.valueOf(edad));
             borrar = new JButton("Borrar");
             borrar.addActionListener(new OyenteBorrar2(contacto));
