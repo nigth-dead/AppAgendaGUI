@@ -16,7 +16,7 @@ public class AppAgendaGUI extends JFrame {
             campoDeTextoEdad, campoDeTextoFecha;
     Agenda agenda = new Agenda();
     JScrollPane scroll;
-    JButton volver, actualizar, borrar, volverInicio;
+    JButton volver, actualizar, borrar;
     JLabel imagen;
 
     public AppAgendaGUI() {
@@ -68,6 +68,7 @@ public class AppAgendaGUI extends JFrame {
             this.opc = opc;
         }
 
+        @Override
         public void actionPerformed(ActionEvent evento) {
             lista = new JPanel();
             lista.setLayout(new GridLayout(0, 1));
@@ -185,6 +186,7 @@ public class AppAgendaGUI extends JFrame {
 
     class OyenteVolver implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent evento) {
             remove(regreso1);
             remove(añadirGUI);
@@ -204,6 +206,7 @@ public class AppAgendaGUI extends JFrame {
             this.contacto = contacto;
         }
 
+        @Override
         public void actionPerformed(ActionEvent evento) {
             int band = 0;
             try {
@@ -213,9 +216,9 @@ public class AppAgendaGUI extends JFrame {
                 String apellidoPaterno = campoDeTextoApellidoPaterno.getText();
                 String apellidoMaterno = campoDeTextoApellidoMaterno.getText();
                 String fechaTexto;
-                if (opcion.equalsIgnoreCase("Guardar")){
+                if (opcion.equalsIgnoreCase("Guardar")) {
                     fechaTexto = campoDeTextoEdad.getText();
-                }else{
+                } else {
                     fechaTexto = campoDeTextoFecha.getText();
                 }
 
@@ -319,33 +322,9 @@ public class AppAgendaGUI extends JFrame {
         }
     }
 
-    class OyenteBorrar implements ActionListener {
-
-        private Contacto contacto;
-
-        public OyenteBorrar(Contacto contacto) {
-            this.contacto = contacto;
-        }
-
-        public void actionPerformed(ActionEvent evento) {
-            int respuesta = JOptionPane.showConfirmDialog(mostrarGUI, "¿Estás "
-                    + "seguro de que deseas borrar este contacto?", "Confirmar "
-                    + "eliminación", JOptionPane.YES_NO_OPTION);
-            if (respuesta == JOptionPane.YES_OPTION) {
-                JOptionPane.showMessageDialog(mostrarGUI, "Contacto borrado "
-                        + "exitosamente", "Accion realizada con exito",
-                        JOptionPane.INFORMATION_MESSAGE);
-                agenda.eliminarContacto(contacto);
-                remove(regreso1);
-                remove(mostrarGUI);
-                new OyenteMostrar(agenda.getContactos(),
-                        "mostrar").actionPerformed(null);
-            }
-        }
-    }
-
     class OyenteBuscar implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent evento) {
             remove(panel1);
             buscarGUI = new JPanel();
@@ -393,6 +372,7 @@ public class AppAgendaGUI extends JFrame {
             this.dato.setHorizontalAlignment(SwingConstants.CENTER);
         }
 
+        @Override
         public void actionPerformed(ActionEvent evento) {
             remove(regreso1);
             remove(buscarGUI);
@@ -403,6 +383,7 @@ public class AppAgendaGUI extends JFrame {
             sBuscar.add(dato);
             JButton bBuscar = new JButton("Buscar");
             bBuscar.addActionListener(new ActionListener() {
+                @Override
                 public void actionPerformed(ActionEvent e) {
                     String texto = dato.getText();
                     int band = 0;
@@ -419,8 +400,7 @@ public class AppAgendaGUI extends JFrame {
                             break;
                         case 2:
                             try {
-                                int num = Integer.parseInt(texto);
-                                resultado = agenda.buscarContactoPorNumero(num);
+                                resultado = agenda.buscarContactoPorNumero(texto);
                             } catch (NumberFormatException ex) {
                                 if (band != 1) {
                                     JOptionPane.showMessageDialog(sBuscar,
@@ -470,6 +450,7 @@ public class AppAgendaGUI extends JFrame {
             this.contacto = contacto;
         }
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             remove(scroll);
             remove(volver);
@@ -524,7 +505,6 @@ public class AppAgendaGUI extends JFrame {
             campoDeTextoApellidoMaterno.setText(contacto.getApellidoMaterno());
             campoDeTextoNumero.setText(contacto.getNumero());
             campoDeTextoEmail.setText(contacto.getEmail());
-            SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
             Date fechaNacimiento = contacto.getFechaDeNacimiento();
             int edad = agenda.calcularEdad(fechaNacimiento);
             campoDeTextoEdad.setText(String.valueOf(edad));
@@ -532,7 +512,7 @@ public class AppAgendaGUI extends JFrame {
             borrar.addActionListener(new OyenteBorrar2(contacto));
             regreso3.add(borrar);
             actualizar = new JButton("Actualizar");
-            actualizar.addActionListener(new OyenteActualizar(contacto,tituloEdad, campoDeTextoEdad));
+            actualizar.addActionListener(new OyenteActualizar(contacto, tituloEdad, campoDeTextoEdad));
             regreso3.add(actualizar);
             volver = new JButton("Volver a inicio");
             volver.addActionListener(new OyenteVolverInicio());
@@ -552,6 +532,7 @@ public class AppAgendaGUI extends JFrame {
             this.contacto = contacto;
         }
 
+        @Override
         public void actionPerformed(ActionEvent evento) {
             int respuesta = JOptionPane.showConfirmDialog(mostrarGUI, "¿Estás seguro de que deseas borrar este contacto?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
             if (respuesta == JOptionPane.YES_OPTION) {
@@ -567,20 +548,9 @@ public class AppAgendaGUI extends JFrame {
         }
     }
 
-    class OyenteVolver5 implements ActionListener {
-
-        public void actionPerformed(ActionEvent evento) {
-            remove(regreso3);
-            remove(mostrarGUI);
-            add(scroll, BorderLayout.CENTER);
-            add(regreso3, BorderLayout.SOUTH);
-            revalidate();
-            repaint();
-        }
-    }
-
     class OyenteVolver4 implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent evento) {
             remove(volver);
             remove(scroll);
@@ -593,6 +563,7 @@ public class AppAgendaGUI extends JFrame {
 
     class OyenteVolverBuscar implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent evento) {
             remove(regreso2);
             remove(sBuscar);
@@ -605,6 +576,7 @@ public class AppAgendaGUI extends JFrame {
 
     class OyenteVolver3 implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent evento) {
             remove(regreso1);
             remove(buscarGUI);
@@ -626,6 +598,7 @@ public class AppAgendaGUI extends JFrame {
             this.campoDeTextoEdad = campoDeTextoEdad;
         }
 
+        @Override
         public void actionPerformed(ActionEvent evento) {
 
             regreso3.remove(actualizar);
@@ -634,7 +607,7 @@ public class AppAgendaGUI extends JFrame {
             tituloEdad.setText("Fecha de nacimiento");
             tabla.remove(campoDeTextoEdad);
             SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-            campoDeTextoFecha=new JTextField();
+            campoDeTextoFecha = new JTextField();
             campoDeTextoFecha.setText(formato.format(contacto.getFechaDeNacimiento()));
             tabla.add(campoDeTextoFecha);
             campoDeTextoNombre.setEditable(true);
@@ -657,6 +630,7 @@ public class AppAgendaGUI extends JFrame {
 
     class OyenteVolverInicio implements ActionListener {
 
+        @Override
         public void actionPerformed(ActionEvent evento) {
             remove(regreso3);
             if (mostrarGUI != null) {

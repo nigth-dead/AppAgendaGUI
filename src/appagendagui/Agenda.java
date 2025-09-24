@@ -92,7 +92,7 @@ public final class Agenda {
         return resultado;
     }
 
-    public ArrayList<Contacto> buscarContactoPorNumero(int numero) {
+    public ArrayList<Contacto> buscarContactoPorNumero(String numero) {
         ArrayList<Contacto> resultado = new ArrayList<>();
         for (Contacto c : contactos) {
             if (c.getNumero().equals(numero)) {
