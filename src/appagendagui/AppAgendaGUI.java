@@ -6,7 +6,7 @@ import java.awt.event.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-//hola
+
 
 public class AppAgendaGUI extends JFrame {
 
