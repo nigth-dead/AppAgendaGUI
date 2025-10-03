@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "nombre": "edgar ",
+    "apellidoMaterno": "martinez",
+    "apellidoPaterno": "cortes",
+    "numero": "2282384306",
+    "email": "honda2054@gmail.com",
+    "fechaDeNacimiento": "May 24, 2006, 12:00:00 AM"
+  },
+  {
+    "nombre": "erick",
+    "apellidoMaterno": "del angel",
+    "apellidoPaterno": "gutierres",
+    "numero": "1234567890",
+    "email": "hola@gmail.com",
+    "fechaDeNacimiento": "May 24, 2006, 12:00:00 AM"
+  }
+]
